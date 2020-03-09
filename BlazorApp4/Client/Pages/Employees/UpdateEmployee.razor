@@ -1,0 +1,49 @@
+﻿@page "/employee/{Id:long}/edit"
+@using BlazorApp4.Shared.Models
+@inject HttpClient httpClient
+
+<h3>Edit Employee</h3>
+
+<div style="max-width: 400px;">
+    <EditForm Model="@employee" OnValidSubmit="@EditEmployee">
+        <DataAnnotationsValidator />
+        <ValidationSummary />
+        <div class="form-group row">
+            <label for="Name" class="col-sm-6 col-form-label">Name:</label>
+            <input id="Name" class="form-control col-sm-6 input-lg" type="text" disabled="@isSuccess"
+                   @bind="employee.Name" />
+        </div>
+        <div class="form-group row">
+            <label for="Area" class="col-sm-6 col-form-label">Area:</label>
+            <input id="Area" class="form-control col-sm-6 input-lg" type="text" disabled="@isSuccess"
+                   @bind="employee.Area" />
+        </div>
+        <button class="btn btn-primary" type="submit" disabled="@isSuccess">Submit</button>
+        <div class="alert @(isSuccess?"alert-success":"alert-danger")" style="margin-top:1rem" role="alert" hidden="@(message=="")">@message</div>
+    </EditForm>
+</div>
+
+@code {
+    [Parameter]
+    public long Id { get; set; }
+
+    private Employee employee = new Employee();
+
+    private bool isSuccess = false;
+    private string message = "";
+
+    public async Task EditEmployee()
+    {
+        await httpClient.SendJsonAsync(HttpMethod.Put, $"api/Employees/1", employee);
+        isSuccess = true;
+        message = "Done!";
+        ClearFields();
+        StateHasChanged();
+    }
+
+    private void ClearFields()
+    {
+        employee.Name = string.Empty;
+        employee.Area = string.Empty;
+    }
+}

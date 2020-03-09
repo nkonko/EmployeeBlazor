@@ -1,0 +1,47 @@
+﻿@using BlazorApp4.Shared.Models;
+@page "/employees"
+@inject HttpClient httpClient;
+
+    <div class="container">
+        @if (Employees.Any())
+        {
+            <table class='table table-hover'>
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Area</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Employees)
+                    {
+                        <tr>
+                            <td>@item.Name</td>
+                            <td>@item.Area</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+            <br />
+            <div class="row">
+                <div class="col-sm-8 text-right">
+                    <a href="/employee/@Id/edit" class="btn btn-sm btn-secondary">Edit</a>
+                </div>
+            </div>
+        }
+        else
+        {
+            <p>No Employees Found</p>
+        }
+    </div>
+
+@code {
+    [Parameter]
+    public long Id { get; set; }
+
+    public List<Employee> Employees { get; set; } = new List<Employee>();
+
+    protected override async Task OnInitializedAsync() => await GetEmployees();
+
+    private async Task GetEmployees() => Employees = await httpClient.GetJsonAsync<List<Employee>>("api/Employees");
+}
