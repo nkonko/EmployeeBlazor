@@ -20,27 +20,27 @@
         </div>
         <button class="btn btn-primary" type="submit" disabled="@isSuccess">Submit</button>
         <div class="alert @(isSuccess?"alert-success":"alert-danger")" style="margin-top:1rem" role="alert" hidden="@(message=="")">@message</div>
-        </EditForm>
+    </EditForm>
 </div>
+@code
+{
+    private Employee employee = new Employee();
 
-    @code {
-        private Employee employee = new Employee();
+    private bool isSuccess = false;
+    private string message = "";
 
-        private bool isSuccess = false;
-        private string message = "";
-
-        public async Task PostEmployee()
-        {
-            await httpClient.SendJsonAsync(HttpMethod.Post, "api/Employees", employee);
-            isSuccess = true;
-            message = "Created!";
-            ClearFields();
-            StateHasChanged();
-        }
-
-        private void ClearFields()
-        {
-            employee.Name = string.Empty;
-            employee.Area = string.Empty;
-        }
+    public async Task PostEmployee()
+    {
+        await httpClient.SendJsonAsync(HttpMethod.Post, $"api/Employees", employee);
+        isSuccess = true;
+        message = "Done!";
+        ClearFields();
+        StateHasChanged();
     }
+
+    private void ClearFields()
+    {
+        employee.Name = string.Empty;
+        employee.Area = string.Empty;
+    }
+}
