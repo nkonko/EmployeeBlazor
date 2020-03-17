@@ -1,5 +1,4 @@
-﻿@page "/employee/{Id:long}/edit"
-@using BlazorApp4.Shared.Models
+﻿@page "/employee/edit/{Id:long}"
 @inject HttpClient httpClient
 
 <h3>Edit Employee</h3>
@@ -22,28 +21,3 @@
         <div class="alert @(isSuccess?"alert-success":"alert-danger")" style="margin-top:1rem" role="alert" hidden="@(message=="")">@message</div>
     </EditForm>
 </div>
-
-@code {
-    [Parameter]
-    public long Id { get; set; }
-
-    private Employee employee = new Employee();
-
-    private bool isSuccess = false;
-    private string message = "";
-
-    public async Task EditEmployee()
-    {
-        await httpClient.SendJsonAsync(HttpMethod.Put, $"api/Employees/1", employee);
-        isSuccess = true;
-        message = "Done!";
-        ClearFields();
-        StateHasChanged();
-    }
-
-    private void ClearFields()
-    {
-        employee.Name = string.Empty;
-        employee.Area = string.Empty;
-    }
-}
